@@ -1,0 +1,8 @@
+cat rphost*/*.log | \
+perl -n -e 'if (/^\d\d:\d\d\.\d+/) {$event =~ s/.\n/<line>/g; print $event."\n"; $event = "";} $event .= $_; END{print $event};' | \
+perl -pe 's/\xef\xbb\xbf//g' | \
+perl -pe 's/<line>//' | \
+perl -pe 's/^\d+:\d+.\d+-\d+.*processName=//g' | \
+awk -F',' '{count[$1]+=1;} END {for(i in count) {printf "%d %s\n",count[i], i}}' | \
+sort -rnb | \
+head -n 5

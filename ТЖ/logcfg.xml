@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://v8.1c.ru/v8/tech-log">
+	<log location="C:\LogTJ\ADMIN" history="28">
+		<event>
+			<eq property="Name" value="PROC"/>
+		</event>
+		<event>
+			<eq property="Name" value="ADMIN"/>
+		</event>
+		<event>
+			<eq property="Name" value="CONN"/>
+		</event>
+		<event>
+			<eq property="Name" value="SESN"/>
+		</event>
+		<event>
+			<eq property="Name" value="CLSTR"/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="C:\LogTJ\EXCP" history="28">
+		<event>
+			<eq property="Name" value="EXCP"/>
+		</event>
+		<event>
+			<eq property="Name" value="EXCPCNTX"/>
+		</event>
+		<event>
+			<eq property="Name" value="QERR"/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="C:\LogTJ\LOCKS" history="28">
+		<event>
+			<eq property="name" value="TLOCK" /> 
+		</event>
+		<event>
+			<eq property="name" value="TTIMEOUT" /> 
+		</event>
+		<event>
+			<eq property="name" value="TDEADLOCK" /> 
+		</event>
+		<property name="p:processName" /> 
+		<property name="t:clientID" /> 
+		<property name="SessionID" /> 
+		<property name="Usr" /> 
+		<property name="Regions" /> 
+		<property name="WaitConnections" /> 
+		<property name="Context" /> 
+	</log>
+	<log location="C:\LogTJ\CALL" history="28">
+	<event>
+		<eq property="name" value="CALL" /> 
+	</event>
+	<property name="all" /> 
+	</log>
+	<log location="C:\LogTJ\Queries_simple" history="28">
+		<event>
+			<eq property="name" value="DBMSSQL" /> 
+		</event>
+	<property name="p:processName" /> 
+	<property name="t:clientID" /> 
+	<property name="SessionID" /> 
+	<property name="Usr" /> 
+	<property name="Context" /> 
+	</log>
+	<log location="C:\LogTJ\SDBL" history="28">
+		<event>
+			<eq property="name" value="SDBL" />
+		</event>
+	<property name="p:processName" /> 
+	<property name="t:clientID" /> 
+	<property name="Usr" /> 
+	<property name="Trans" /> 
+	<property name="Func" /> 
+	<property name="Context" /> 
+	</log>
+</config>
