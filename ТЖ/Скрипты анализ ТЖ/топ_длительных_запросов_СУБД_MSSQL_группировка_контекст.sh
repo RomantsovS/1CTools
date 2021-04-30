@@ -17,63 +17,37 @@ if [ -z "$3" ]
 then ShowBaseUsrName=0;
 fi
 
-#cat $rphostFilter/*.log | \
 cat $rphostFilter/*.log | \
-#head -n 100 | \
+#head -n 10000 | \
 awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0 "<line>";}' | \
 perl -pe 's/\xef\xbb\xbf//g' | \
-#grep -P "DBMSSQL.*Sql" | \
-#grep -P "DBMSSQL.*p:processName=buh_rklimat_2.*Context" | \
 grep -P "DBMSSQL.*Context" | \
 perl -pe 's/^\d+:\d+.\d+-//g' | \
-#perl -pe 's/,DBMSSQL,.*Sql=/,Sql=/g' | \
 perl -pe 's/Context.*<line>[ \t]+/Context=/g' | \
 perl -pe 's/\w+-\w+-\w+-\w+-\w+/{GUID}/g' | \
 perl -pe 's/0[xX][0-9a-fA-F]+/{GUID}/g' | \
+perl -pe 's/,DBMSSQL,.*,p:processName=/,;,/g' | \
+perl -pe 's/,OSThread=.*,Usr=/,;,/g' | \
+perl -pe 's/,AppID=.*,Context=/,;,/g' | \
 perl -pe 's/\(\d+\)/({NUM})/g' | \
 perl -pe 's/tt\d+/{TempTable}/g' | \
-awk -v ShowBaseNameAWK=$ShowBaseName -v ShowBaseUsrNameAWK=$ShowBaseUsrName '{
-	posContext = match($0, ",Context=");
-	if(posContext != 0) {
-		Context = substr($0, posContext + 9);
-		gsub("<line>", "", Context);
+perl -pe 's/<line>//g' | \
+awk -F',;,' -v ShowBaseNameAWK=$ShowBaseName -v ShowBaseUsrNameAWK=$ShowBaseUsrName '{
+	if(ShowBaseNameAWK > 0) BaseName = $2;
+	if(ShowBaseUsrNameAWK > 0) UsrName = $3;
+	Context = BaseName"::"$4"::"UsrName;
+	count[Context] += 1;
+	
+	dlit_cur = $1 / 1000000;
+	dlit[Context] += dlit_cur;
+	
+	if(dlit_max[Context] < dlit_cur) dlit_max[Context] = dlit_cur;
 	}
-	else {
-		posSql = match($0, ",Sql=");
-		Context = substr($0, posSql + 5);
-		if(length(Context > 200)) {
-			Context = "SQL QUERY"
-		}
-		gsub("<line>", "\t", Context);
+ END {
+	printf "* sec   avg   max   cnt   context\n"
+	for(i in count) {
+		printf "*%10.2f %10.2f %10.2f %10d   %s\n", dlit[i], dlit[i] / count[i], dlit_max[i], count[i], i
 	}
-	
-	posProcessName = match($0, ",p:processName=");
-	posclientID = match($0, ",t:clientID=");
-	
-	if(ShowBaseNameAWK > 0) BaseName = substr($0, posProcessName + length(",p:processName="), posclientID - posProcessName - length(",p:processName="));
-	
-	posTrans = match($0, ",Trans");
-	posUsr = match($0, ",Usr");
-	
-	if(ShowBaseUsrNameAWK > 0) UsrName = substr($0, posUsr + 1, (posContext - posUsr - 1));
-  
-	Context = BaseName " :: " Context " :: " UsrName;
-	
-	posDBMSSQL = match($0, ",DBMSSQL");
-	dlit = substr($0, 1, posDBMSSQL - 1);
-	dlit = dlit / 1000000;
-	
-	if(dlit > 0) {
-		sum[Context]+=dlit; count[Context]+=1;
-		if(maxdlit[Context] < dlit) {
-			maxdlit[Context] = dlit;
-		}
-	}
-} END {
-	printf " *   sec     min     avrg     max    cnt     Context\n"
-	for(i in sum) {
-		printf " *%8d %5d %8.2f %7.2f %6d %s\n", sum[i], sum[i] / 60, sum[i] / count[i],
-		maxdlit[i], count[i], i}
 }' | \
 sort -rnb | \
 head -n "$TopEntitiesCount";
