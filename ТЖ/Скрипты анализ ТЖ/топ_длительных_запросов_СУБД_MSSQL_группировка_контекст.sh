@@ -27,8 +27,8 @@ perl -pe 's/Context.*<line>[ \t]+/Context=/g' | \
 perl -pe 's/\w+-\w+-\w+-\w+-\w+/{GUID}/g' | \
 perl -pe 's/0[xX][0-9a-fA-F]+/{GUID}/g' | \
 perl -pe 's/,DBMSSQL,.*,p:processName=/,;,/g' | \
-perl -pe 's/,OSThread=.*,Usr=/,;,/g' | \
-perl -pe 's/,AppID=.*,Context=/,;,/g' | \
+perl -pe 's/,Usr=/,;,/g' | \
+perl -pe 's/,Sql=.*,Context=/,;,/g' | \
 perl -pe 's/\(\d+\)/({NUM})/g' | \
 perl -pe 's/tt\d+/{TempTable}/g' | \
 perl -pe 's/<line>//g' | \
@@ -44,7 +44,7 @@ awk -F',;,' -v ShowBaseNameAWK=$ShowBaseName -v ShowBaseUsrNameAWK=$ShowBaseUsrN
 	if(dlit_max[Context] < dlit_cur) dlit_max[Context] = dlit_cur;
 	}
  END {
-	printf "* sec   avg   max   cnt   context\n"
+	printf "**      sec        avg        max        cnt   context\n"
 	for(i in count) {
 		printf "*%10.2f %10.2f %10.2f %10d   %s\n", dlit[i], dlit[i] / count[i], dlit_max[i], count[i], i
 	}

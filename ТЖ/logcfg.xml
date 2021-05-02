@@ -55,6 +55,7 @@
 	<log location="C:\LogTJ\Queries_simple" history="28">
 		<event>
 			<eq property="name" value="DBMSSQL" /> 
+			<ge property="Durationus" value="100000"/>
 		</event>
 		<property name="p:processName" /> 
 		<property name="Usr" /> 
@@ -64,6 +65,7 @@
 	<log location="C:\LogTJ\SDBL" history="28">
 		<event>
 			<eq property="name" value="SDBL" />
+			<ge property="Durationus" value="100000"/>
 		</event>
 		<property name="p:processName" /> 
 		<property name="Usr" /> 
