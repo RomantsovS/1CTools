@@ -1,4 +1,4 @@
-use [ERP-RKKT]
+use [ERP-DEV-Romantsov_s]
 
 SELECT 
 		DB_NAME(mid.database_id) as [»м€Ѕазы],
@@ -10,7 +10,7 @@ SELECT
 		CAST(migs.avg_user_impact AS int) as [—реднийѕроцент¬ыигрыша],
 		OBJECT_NAME(mid.object_id,mid.database_id) as [“аблица»ндекса],
 		cast(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) as int) as [—реднееѕредполагаемое¬ли€ние],
-		cast(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) * migs.avg_total_user_cost as numeric(15)) as [—реднееѕредполагаемое¬ли€ние1],
+		round(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) * migs.avg_total_user_cost, 0) as [—реднееѕредполагаемое¬ли€ние1],
 		'CREATE INDEX [IX_' +OBJECT_NAME(mid.object_id,mid.database_id) + '_'
 		+ REPLACE(REPLACE(REPLACE(ISNULL(mid.equality_columns,''),', ','_'),'[',''),']','') +
 		CASE

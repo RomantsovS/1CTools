@@ -8,6 +8,9 @@
 			<eq property="Name" value="ADMIN"/>
 		</event>
 		<event>
+			<eq property="Name" value="ATTN"/>
+		</event>
+		<event>
 			<eq property="Name" value="CONN"/>
 		</event>
 		<event>
@@ -30,6 +33,15 @@
 		</event>
 		<property name="all"/>
 	</log>
+	<log location="C:\LogTJ\HASPLIC" history="28">
+		<event>
+			<eq property="Name" value="HASP"/>
+		</event>
+		<event>
+			<eq property="Name" value="LIC"/>
+		</event>
+		<property name="all"/>
+	</log>
 	<log location="C:\LogTJ\LOCKS" history="28">
 		<event>
 			<eq property="name" value="TLOCK" /> 
@@ -49,6 +61,7 @@
 	<log location="C:\LogTJ\CALL" history="28">
 		<event>
 			<eq property="name" value="CALL" /> 
+			<eq property="process" value="rphost" /> 
 		</event>
 		<property name="all" /> 
 	</log>
@@ -66,6 +79,7 @@
 		<event>
 			<eq property="name" value="SDBL" />
 			<ge property="Durationus" value="100000"/>
+			<like property="Func" value="%Transaction%"/>
 		</event>
 		<property name="p:processName" /> 
 		<property name="Usr" /> 
