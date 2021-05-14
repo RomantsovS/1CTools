@@ -17,7 +17,9 @@ if [ -z "$3" ]
 then ShowBaseUsrName=0;
 fi
 
-cat $rphostFilter/*.log | \
+printf "%10s %10s %10s %10s %s\n", "sec", "avrg", "max", "cnt", "Context" \
+; printf "%s\n" \
+; time cat $rphostFilter/*.log | \
 #head -n 10000 | \
 awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0 "<line>";}' | \
 perl -pe 's/\xef\xbb\xbf//g' | \
@@ -44,7 +46,6 @@ awk -F',;,' -v ShowBaseNameAWK=$ShowBaseName -v ShowBaseUsrNameAWK=$ShowBaseUsrN
 	if(dlit_max[Context] < dlit_cur) dlit_max[Context] = dlit_cur;
 	}
  END {
-	printf "**      sec        avg        max        cnt   context\n"
 	for(i in count) {
 		printf "*%10.2f %10.2f %10.2f %10d   %s\n", dlit[i], dlit[i] / count[i], dlit_max[i], count[i], i
 	}
