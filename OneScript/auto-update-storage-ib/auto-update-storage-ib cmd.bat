@@ -1,0 +1,1 @@
+cmd /k auto-update-storage-ib.bat
