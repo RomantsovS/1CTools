@@ -1,5 +1,3 @@
-use [BUH-TEST-RKK]
-
 --EXEC sp_updatestats;
 
 DECLARE @DateNow DATETIME

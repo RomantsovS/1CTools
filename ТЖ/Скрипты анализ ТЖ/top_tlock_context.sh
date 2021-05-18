@@ -1,7 +1,9 @@
 echo $(date);
 rphostFilter="rphost_*";
 echo rphostFilter $rphostFilter;
-cat $rphostFilter/*.log | \
+printf "%8s %5s %8s %6s %s\n", "sec", "min", "avrg", "cnt", "Context" \
+; printf "%s\n" \
+; time cat $rphostFilter/*.log | \
 #head -n 100000 | \
 awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0 "<line>";}' | \
 perl -pe 's/\xef\xbb\xbf//g' | \
@@ -28,9 +30,8 @@ awk '{
 	sum[Context]+=dlit;
 	count[Context]+=1;
 } END {
-	printf "\t****     sec   min     avrg    cnt Context\n"
 	for(i in sum) {
-		printf "\t****%8d %5d %8.2f %6d %s\n", sum[i], sum[i] / 60, sum[i]/count[i], count[i], i
+		printf "%8d %5d %8.2f %6d %s\n", sum[i], sum[i] / 60, sum[i]/count[i], count[i], i
 	}
 }' | \
 sort -rnb | \

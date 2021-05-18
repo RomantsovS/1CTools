@@ -1,12 +1,10 @@
-use [ERP-DEV-Romantsov_s]
-
 SELECT 
 		DB_NAME(mid.database_id) as [»м€Ѕазы],
 		migs.unique_compiles as [ ол омпил€ций],
 		migs.user_seeks as [ олќперацийѕоиска],
 		migs.user_scans as [ олќперацийѕросмотра],
 		migs.last_user_seek as last_user_seek,
-		CAST(migs.avg_total_user_cost AS int) as [—редн€€—тоимость],
+		round(migs.avg_total_user_cost, 2) as [—редн€€—тоимость],
 		CAST(migs.avg_user_impact AS int) as [—реднийѕроцент¬ыигрыша],
 		OBJECT_NAME(mid.object_id,mid.database_id) as [“аблица»ндекса],
 		cast(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) as int) as [—реднееѕредполагаемое¬ли€ние],
@@ -38,6 +36,6 @@ SELECT
 		 migs.avg_user_impact*(migs.user_seeks+migs.user_scans) > 1
 		 --AND CAST(migs.avg_total_user_cost AS int) < 10
 		 AND mid.database_id = DB_ID()
-		 and OBJECT_NAME(mid.object_id,mid.database_id) like '%_Reference%'
+		and OBJECT_NAME(mid.object_id,mid.database_id) like '%_Reference%'
 		--and mid.equality_columns like '%878%'
 		ORDER BY [—реднееѕредполагаемое¬ли€ние1] desc
