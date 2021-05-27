@@ -36,6 +36,6 @@ SELECT
 		 migs.avg_user_impact*(migs.user_seeks+migs.user_scans) > 1
 		 --AND CAST(migs.avg_total_user_cost AS int) < 10
 		 AND mid.database_id = DB_ID()
-		and OBJECT_NAME(mid.object_id,mid.database_id) like '%_Reference%'
+		--and OBJECT_NAME(mid.object_id,mid.database_id) like '%_Reference%'
 		--and mid.equality_columns like '%878%'
 		ORDER BY [—реднееѕредполагаемое¬ли€ние1] desc

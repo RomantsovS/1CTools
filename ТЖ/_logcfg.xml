@@ -33,15 +33,6 @@
 		</event>
 		<property name="all"/>
 	</log>
-	<log location="C:\LogTJ\HASPLIC" history="28">
-		<event>
-			<eq property="Name" value="HASP"/>
-		</event>
-		<event>
-			<eq property="Name" value="LIC"/>
-		</event>
-		<property name="all"/>
-	</log>
 	<log location="C:\LogTJ\LOCKS" history="28">
 		<event>
 			<eq property="name" value="TLOCK" /> 
