@@ -1,5 +1,3 @@
-use ERP
-
 SELECT top 100
 	a1.rows as row_count,
 	a2.name AS [tablename],

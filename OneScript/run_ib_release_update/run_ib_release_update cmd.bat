@@ -1,0 +1,1 @@
+cmd /k run_ib_release_update.bat

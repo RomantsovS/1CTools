@@ -1,9 +1,7 @@
 echo $(date);
-rphostFilter="rphost_*";
-echo rphostFilter $rphostFilter;
 printf "%8s %5s %8s %6s %s\n", "sec", "min", "avrg", "cnt", "Context" \
 ; printf "%s\n" \
-; time cat $rphostFilter/*.log | \
+; time cat LOCKS/rphost*/*.log | \
 #head -n 100000 | \
 awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0 "<line>";}' | \
 perl -pe 's/\xef\xbb\xbf//g' | \

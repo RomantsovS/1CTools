@@ -1,16 +1,16 @@
 # Топ суммарно длительных вызовов
 # Суммарная длительность :: База :: Вызов
 echo $(date);
-rphostFilter="rphost_*";
-echo rphostFilter $rphostFilter;
 printf "%8s %5s %8s %7s %7s %7s %10s %7s %10s %s\n", "sec", "min", "avrg", "cnt", "OutMB", "InMB", "MBMemPeak", "MBMem", "Cpu_sec", "Context" \
 ; printf "%s\n" \
-; time cat $rphostFilter/*.log | \
-#head -n 1000 | \
-awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0;}' | \
-perl -pe 's/\xef\xbb\xbf//g' | \
-grep -P ',.*CALL,.*p:processName=.*' | \
+; time cat CALL/rphost*/*.log |
+#head -n 1000 |
+awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0;}' |
+perl -pe 's/\xef\xbb\xbf//g' |
+grep -P ',.*CALL,.*p:processName=.*' |
 awk '{
+ToAdd = 1; # определяет, выполнять ли проверку в массиве и добавление, т.е. пропускать строку или нет
+
  posDlit = match($0, "-");
  posCALL = match($0, ",.*CALL");
  LenDlit = posCALL - posDlit;
@@ -25,21 +25,33 @@ awk '{
  Memory = substr($0, posMemory + 8, (posMemoryPeak - posMemory - 8));
  
  posCpuTime = match($0, ",CpuTime=");
-	
- ToAdd = 0; # определяет, выполнять ли проверку в массиве и добавление, т.е. пропускать строку или нет
+ 
+ posBase = match($0, "p:processName=");
+ 
+ Context = "<empty>"
+ 
+ if(posBase != 0) {
+  strProcessNameMore = substr($0, posBase + 1);
+  posEndProcessName = match(strProcessNameMore, ",");
+  pBase = substr(strProcessNameMore, 14, posEndProcessName - 14);
+ } else {
+	posBase = "<empty>"
+ }
+ 
+ posUsr = match($0, ",Usr");
+ if(posUsr != 0) {
+  strUsrNameMore = substr($0, posUsr + 1);
+  posEndUsrName = match(strUsrNameMore, ",");
+  UsrName = substr(strUsrNameMore, 5, posEndUsrName - 5);
+ } else {
+	UsrName = "<empty>"
+ }
+ 
+ UsrName = "<empty>"
  
  posFunc = match($0, ",Func=");
  if(posFunc!=0) # у регламентных заданий так
- { 
-  ToAdd = 1;
-  posSessionID = match($0, ",SessionID");
-  posUsr = match($0, ",Usr");
-  #UsrName = substr($0, posUsr + 1, (posSessionID - posUsr - 1));
-  
-  posBase = match($0, "p:processName=");
-  LenBase = posFunc - posBase;
-  pBase = substr($0, posBase, LenBase);
-  gsub("p:processName", "Base", pBase);
+ {
   posMemory = match($0, ",Memory=");
   posModule = match($0, ",Module=");
   LenMethod = posMemory - posModule;
@@ -50,12 +62,6 @@ awk '{
   posContext = match($0, ",Context=");
   if(posContext!=0)
   {
-   ToAdd = 1;
-   posBase = match($0, "p:processName=");
-   postOSThread = match($0, ",OSThread=");
-   LenBase = postOSThread - posBase;
-   pBase = substr($0, posBase, LenBase);
-   gsub("p:processName", "Base", pBase);
    strContexMore = substr($0, posContext+1);
    posEndContext = match(strContexMore, ",");
    Context = substr(strContexMore, 1, posEndContext - 1);
@@ -66,14 +72,9 @@ awk '{
  
  if(ToAdd==1)
  {
-	posOutBytes = match($0, ",OutBytes=");
 	OutBytes = substr($0, posOutBytes + length(",OutBytes="), posCpuTime - posOutBytes + length(",OutBytes="));
-	posInBytes = match($0, ",InBytes=");
 	InBytes = substr($0, posInBytes + length(",InBytes="), posOutBytes - posInBytes - length(",InBytes="));
-	posMemoryPeak = match($0, ",MemoryPeak=");
-	MemoryPeak = substr($0, posMemoryPeak + length(",MemoryPeak="), posInBytes - posMemoryPeak - length(",MemoryPeak="));
-	posMemory = match($0, ",Memory=");
-	Memory = substr($0, posMemory + length(",Memory="), posMemoryPeak - posMemory - length(",Memory="));	
+	MemoryPeak = substr($0, posMemoryPeak + length(",MemoryPeak="), posInBytes - posMemoryPeak - length(",MemoryPeak="));	
   
 	if(posCpuTime == 0) {
 		CpuTime = 0;
@@ -85,10 +86,10 @@ awk '{
  
 	arr_dlits[KeyStr] += dlit;
 	arr_counts[KeyStr] += 1;
-	arr_OutBytes[KeyStr] += OutBytes / 1024 / 1024;
-	arr_InBytes[KeyStr] += InBytes / 1024 / 1024;
-	if(arr_MemoryPeak[KeyStr] < MemoryPeak) arr_MemoryPeak[KeyStr] = MemoryPeak / 1024 / 1024;
-	arr_Memory[KeyStr] += Memory / 1024 / 1024;
+	arr_OutBytes[KeyStr] += OutBytes / 1000 / 1000;
+	arr_InBytes[KeyStr] += InBytes / 1000 / 1000;
+	if(arr_MemoryPeak[KeyStr] < MemoryPeak) arr_MemoryPeak[KeyStr] = MemoryPeak / 1000 / 1000;
+	arr_Memory[KeyStr] += Memory / 1000 / 1000;
 	arr_CpuTime[KeyStr] += CpuTime;
  } 
 } END {

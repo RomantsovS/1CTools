@@ -1,0 +1,1 @@
+runner compileexttocfe -s ./../tmp/itilium/src/cfe/sbl_cfe -o sbl.cfe --language ru  

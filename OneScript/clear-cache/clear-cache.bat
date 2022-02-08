@@ -1,1 +1,1 @@
-oscript w:\1C_group\romantsov_s\OneScript\clear-cache\clear-cache.os
+oscript %~dp0clear-cache.os

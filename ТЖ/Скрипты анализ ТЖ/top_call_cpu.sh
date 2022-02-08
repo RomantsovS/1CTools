@@ -5,7 +5,7 @@ rphostFilter="rphost_*";
 echo rphostFilter $rphostFilter;
 printf "%10s %8s %5s %8s %7s %7s %7s %10s %7s %s\n", "Cpu_sec", "sec", "min", "avrg", "cnt", "OutMB", "InMB", "MBMemPeak", "MBMem", "Context" \
 ; printf "%s\n" \
-; time cat $rphostFilter/*.log | \
+; time cat CALL/$rphostFilter/*.log | \
 #head -n 1000 | \
 awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0;}' | \
 perl -pe 's/\xef\xbb\xbf//g' | \
