@@ -8,8 +8,8 @@ perl -pe 's/\xef\xbb\xbf//g' | \
 grep -P ",TLOCK,.*WaitConnections=\d+.*,Context" | \
 perl -pe 's/^\d+:\d+.\d+-//g' | \
 #perl -pe 's/,TLOCK,.*Context=/,Context=/g' | \
-perl -pe 's/Context.*<line>[ \t]+/Context=/g' | \
-perl -pe 's/<line>//g' | \
+#perl -pe 's/Context.*<line>[ \t]+/Context=/g' | \
+#perl -pe 's/<line>//g' | \
 awk '{
 	posContext = match($0, ",Context=");
 	Context = substr($0, posContext + 9);
@@ -19,9 +19,14 @@ awk '{
 	dlit = dlit / 1000000;
 	
 	posProcessName = match($0, ",p:processName=");
-	posclientID = match($0, ",t:clientID=");
+	posOSThread = match($0, ",OSThread=");
 	
-	BaseName = substr($0, posProcessName + length(",p:processName="), posclientID - posProcessName - length(",p:processName="));
+	BaseName = substr($0, posProcessName + length(",p:processName="), posOSThread - posProcessName - length(",p:processName="));
+	
+	posUsr = match($0, ",Usr=");
+	posAppID = match($0, ",AppID=");
+	
+	UsrName = substr($0, posUsr + length(",Usr="), posAppID - posUsr - length(",Usr="));
 
 	Context = BaseName " :: " Context " :: " UsrName;
 	
@@ -33,5 +38,6 @@ awk '{
 	}
 }' | \
 sort -rnb | \
+perl -pe 's/<line>/\n/g' |
 head -n 30;
 echo $(date);

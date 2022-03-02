@@ -44,11 +44,7 @@
 		<event>
 			<eq property="name" value="TDEADLOCK" /> 
 		</event>
-		<property name="p:processName" /> 
-		<property name="Usr" /> 
-		<property name="Regions" /> 
-		<property name="WaitConnections" /> 
-		<property name="Context" /> 
+		<property name="all"/> 
 	</log>
 	<log location="E:\LogTJ\CALL" history="24">
 		<event>
