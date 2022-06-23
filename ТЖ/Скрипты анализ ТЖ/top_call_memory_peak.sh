@@ -19,7 +19,7 @@ fi
 
 rphostFilter="CALL/rphost_*/*.log";
 echo rphostFilter $rphostFilter;
-printf "%8s %12s %8s %8s %8s %8s %8s %8s %8s %s\n", "MemMB", "MemPeakKB", "sec", "avrg", "max", "cnt", "OutMB", "InMB", "Cpu_sec", "Context" \
+printf "%12s %8s %8s %8s %8s %8s %8s %8s %8s %s\n", "MemPeakKB", "MemMB", "sec", "avrg", "max", "cnt", "OutMB", "InMB", "Cpu_sec", "Context" \
 ; printf "%s\n" \
 ; time cat $rphostFilter | \
 awk -vORS= '{if(match($0, "^[0-9][0-9]\:[0-9][0-9]\.[0-9]+\-")) print "\n"$0; else print $0;}' |
@@ -118,7 +118,7 @@ awk -v ShowBaseNameAWK=$ShowBaseName -v ShowBaseUsrNameAWK=$ShowBaseUsrName '{
 	arr_CpuTime[KeyStr] += CpuTime;
  } 
 } END {
-	for (i in arr_dlits) {printf "%8d %12d %8d %8.2f %8.2f %8d %8d %8d %8d %s\n", arr_Memory[i], arr_MemoryPeak[i], arr_dlits[i],
+	for (i in arr_dlits) {printf "%12d %8d %8d %8.2f %8.2f %8d %8d %8d %8d %s\n", arr_MemoryPeak[i], arr_Memory[i], arr_dlits[i],
 	arr_dlits[i] / arr_counts[i], dlit_max[i], arr_counts[i], arr_OutBytes[i], arr_InBytes[i], arr_CpuTime[i], i}
 }' | sort -rnb | head -n "$TopEntitiesCount";
 echo $(date);

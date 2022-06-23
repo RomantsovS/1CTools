@@ -18,12 +18,12 @@ logman create counter 1C_counter -f bincirc -c "\Processor(_Total)\Interrupts/se
 
 "\LogicalDisk(_Total)\% Free Space" ^
 
-"Network Adapter(*)\Bytes Total/sec" ^
+"\Network Adapter(*)\Bytes Total/sec" ^
 
 "\Process("1cv8*")\%% Processor Time" "\Process("1cv8*")\Private Bytes" "\Process("1cv8*")\Virtual Bytes" "\Process("ragent*")\% Processor Time" ^
 
 "\Process("ragent*")\Private Bytes" "\Process("ragent*")\Virtual Bytes" "\Process("rphost*")\%% Processor Time" "\Process("rphost*")\Private Bytes" ^
 
-"\Process("rphost*")\Virtual Bytes" "\Process("rmngr*")\%% Processor Time" "\Process("rmngr*")\Private Bytes" "\Process("rmngr*")\Virtual Bytes" -si 1 -v mmddhhmm
+"\Process("rphost*")\Virtual Bytes" "\Process("rmngr*")\%% Processor Time" "\Process("rmngr*")\Private Bytes" "\Process("rmngr*")\Virtual Bytes" -si 15 -v mmddhhmm
 ::logman start 1C_bat_file
 ECHO Complete

@@ -18,6 +18,8 @@ logman create counter 1C_counter -f bincirc -c "\Processor(_Total)\Interrupts/se
 
 "\LogicalDisk(_Total)\% Free Space" ^
 
-"Network Adapter(*)\Bytes Total/sec" -si 1 -v mmddhhmm
+"\Network Adapter(*)\Bytes Total/sec" ^
+
+-si 15 -v mmddhhmm
 ::logman start 1C_bat_file
 ECHO Complete

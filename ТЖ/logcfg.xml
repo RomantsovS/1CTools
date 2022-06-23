@@ -1,19 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config xmlns="http://v8.1c.ru/v8/tech-log">
-	<log location="E:\LogTJ\ADMIN" history="24">
-		<event>
-			<eq property="Name" value="EXCP"/>
-		</event>
-		<event>
-			<eq property="Name" value="EXCPCNTX"/>
-		</event>
-		<event>
-			<eq property="Name" value="QERR"/>
-		</event>
-		<event>
-			<eq property="name" value="CALL"/>
-			<ne property="RetExcp" value=""/>
-		</event>
+	<log location="I:\LogTJ\ADMIN" history="24">
 		<event>
 			<eq property="Name" value="PROC"/>
 		</event>
@@ -34,10 +21,29 @@
 		</event>
 		<property name="all"/>
 	</log>
-	<log location="E:\LogTJ\LOCKS" history="24">
+	<log location="I:\LogTJ\EXCP" history="24">
+		<event>
+			<eq property="Name" value="EXCP"/>
+		</event>
+		<event>
+			<eq property="Name" value="EXCPCNTX"/>
+		</event>
+		<event>
+			<eq property="Name" value="QERR"/>
+		</event>
+		<event>
+			<eq property="name" value="CALL"/>
+			<ne property="RetExcp" value=""/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="I:\LogTJ\LOCKS" history="12">
 		<event>
 			<eq property="name" value="TLOCK" /> 
 		</event>
+		<property name="all"/> 
+	</log>
+	<log location="I:\LogTJ\TTIMEOUTTDEADLOCK" history="24">
 		<event>
 			<eq property="name" value="TTIMEOUT" /> 
 		</event>
@@ -46,31 +52,33 @@
 		</event>
 		<property name="all"/> 
 	</log>
-	<log location="E:\LogTJ\CALL" history="24">
+	<log location="I:\LogTJ\CALL" history="24">
 		<event>
 			<eq property="name" value="CALL" />
 			<eq property="process" value="rphost" />
 		</event>
 		<property name="all" /> 
 	</log>
-	<log location="E:\LogTJ\QUERIES" history="24">
+	<log location="I:\LogTJ\QUERIES" history="24">
 		<event>
 			<eq property="name" value="DBMSSQL" /> 
-			<ge property="Durationus" value="1000000"/>
+			<ge property="Durationus" value="100000"/>
 		</event>
 		<event>
 			<eq property="name" value="DBPOSTGRS" /> 
-			<ge property="Durationus" value="1000000"/>
+			<ge property="Durationus" value="100000"/>
 		</event>
 		<property name="p:processName" /> 
 		<property name="Usr" /> 
 		<property name="Sql" />
-		<property name="Context" /> 
+		<property name="Context" />
+		<property name="planSQLText" />
 	</log>
-	<log location="E:\LogTJ\LIC" history="2">
+	<log location="I:\LogTJ\LIC" history="24">
 		<event>
 			<eq property="Name" value="LIC"/>
 		</event>
 		<property name="all"/>
 	</log>
+<!--<plansql/>-->
 </config>

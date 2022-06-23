@@ -29,9 +29,10 @@ logman create counter 1C_counter -f bincirc -c "\Processor(_Total)\Interrupts/se
 "\SQLServer:SQL Statistics\Batch Requests/sec" "\SQLServer:SQL Statistics\SQL Compilations/sec" "\SQLServer:SQL Statistics\SQL Re-Compilations/sec" ^
 
 "\SQLServer:General Statistics\Transactions" "\SQLServer:General Statistics\User Connections" "\SQLServer:Transactions\Longest Transaction Running Time" ^
+"\SQLServer:Transactions\Free space in TempDB" ^
 
 "\SQLServer:Latches\Average Latch Wait Time (ms)" ^
 
-"\SQLServer:Locks\Average Wait Time (ms)" "\SQLServer:Locks\Lock Timeouts(timeout>0)/sec" "\SQLServer:Locks\Number of Deadlocks/sec" -si 1 -v mmddhhmm
+"\SQLServer:Locks\Average Wait Time (ms)" "\SQLServer:Locks\Lock Timeouts(timeout>0)/sec" "\SQLServer:Locks\Number of Deadlocks/sec" -si 15 -v mmddhhmm
 ::logman start 1C_bat_file
 ECHO Complete

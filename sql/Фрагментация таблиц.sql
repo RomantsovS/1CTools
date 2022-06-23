@@ -1,59 +1,71 @@
-use [BUH-TEST-RKK]
+DECLARE @DatabaseName NVARCHAR(MAX) = '[database]'
+DECLARE @CurrentSchemaName NVARCHAR(MAX)
+DECLARE @CurrentIndexName NVARCHAR(MAX)
+DECLARE @CurrentTableName NVARCHAR(MAX)
+DECLARE @CmdRebuidIndex NVARCHAR(MAX)
 
-SELECT TOP 100
-		 object_name(ps.OBJECT_ID) AS [ИмяТаблицыSQL],
-		 Index_Description = CASE
-						   WHEN ps.index_id = 1 THEN 'Clustered Index'
-						   WHEN ps.index_id <> 1 THEN 'Non-Clustered Index'
-							 END,
-		  b.name AS [ИмяИндекса],
-		 ROUND(ps.avg_fragmentation_in_percent,2,1) AS [ПроцентФрагментации],
-	   SUM(page_count*8) AS [РазмерДанных],
-		  ps.page_count
-	FROM sys.dm_db_index_physical_stats (DB_ID(),NULL,NULL,NULL,NULL) AS ps
-	INNER JOIN sys.indexes AS b ON ps.object_id = b.object_id AND ps.index_id = b.index_id AND b.index_id <> 0 
-	INNER JOIN sys.objects AS O ON O.object_id=b.object_id AND O.type='U' AND O.is_ms_shipped=0 
-	INNER JOIN sys.schemas AS S ON S.schema_Id=O.schema_id
-	WHERE ps.database_id = DB_ID() and ps.avg_fragmentation_in_percent >= 0
-	--and object_name(ps.OBJECT_ID) = '_AccRgED7575'
-	GROUP BY db_name(ps.database_id),S.name,object_name(ps.OBJECT_ID),CASE WHEN ps.index_id = 1 THEN 'Clustered Index' WHEN ps.index_id <> 1 THEN 'Non-Clustered Index' END,b.name,ROUND(ps.avg_fragmentation_in_percent,0,1),ps.avg_fragmentation_in_percent,ps.page_count
-	HAVING SUM(page_count*8) > 10000
-	ORDER BY ps.avg_fragmentation_in_percent DESC
-	
-	/*
-declare @table_name nvarchar(120);
-declare tables_to_reindex cursor for SELECT TOP 100
-		 object_name(ps.OBJECT_ID) AS [ИмяТаблицыSQL]
-	FROM sys.dm_db_index_physical_stats (DB_ID(),NULL,NULL,NULL,NULL) AS ps
-	INNER JOIN sys.indexes AS b ON ps.object_id = b.object_id AND ps.index_id = b.index_id AND b.index_id <> 0 
-	INNER JOIN sys.objects AS O ON O.object_id=b.object_id AND O.type='U' AND O.is_ms_shipped=0 
-	INNER JOIN sys.schemas AS S ON S.schema_Id=O.schema_id
-	WHERE ps.database_id = DB_ID() and ps.avg_fragmentation_in_percent >= 10
-	and object_name(ps.OBJECT_ID) = '_Reference71343'
-	GROUP BY db_name(ps.database_id),S.name,object_name(ps.OBJECT_ID),CASE WHEN ps.index_id = 1 THEN 'Clustered Index' WHEN ps.index_id <> 1 THEN 'Non-Clustered Index' END,b.name,ROUND(ps.avg_fragmentation_in_percent,0,1),ps.avg_fragmentation_in_percent,ps.page_count
-	--HAVING SUM(page_count*8) > 20000
-	ORDER BY ps.avg_fragmentation_in_percent DESC
+DECLARE @tempIndexTable TABLE
+(
+    RowID                       int not null primary key identity(1,1),   
+	TableName                   NVARCHAR(MAX),
+    IndexName                   NVARCHAR(MAX),
+    IndexType                   NVARCHAR(MAX),
+    SchemaName                  NVARCHAR(MAX),
+    AvgFragmentationInPercent   FLOAT,
+    ObjectTypeDescription       NVARCHAR(MAX),
+	Size       NVARCHAR(MAX)
+)
 
+INSERT INTO @tempIndexTable (IndexName, IndexType, TableName, SchemaName, AvgFragmentationInPercent, ObjectTypeDescription, Size) (
+    SELECT top 100
+        i.[name],
+        s.[index_type_desc],
+        o.[name],
+        sch.name,
+        ROUND(s.avg_fragmentation_in_percent,2,1),
+        o.type_desc,
+		s.page_count * 8
+    FROM
+        sys.dm_db_index_physical_stats (DB_ID(), NULL, NULL, NULL, NULL)   AS  s
+		INNER JOIN sys.indexes AS i ON  s.object_id = i.object_id AND s.index_id = i.index_id
+		INNER JOIN sys.objects AS o ON  i.object_id = o.object_id
+		INNER JOIN sys.schemas AS  sch ON  sch.schema_id = o.schema_id
+    WHERE s.database_id = DB_ID()
+	--and object_name(s.OBJECT_ID) like '%2809%'
+	--and (s.avg_fragmentation_in_percent > 30)  
+	and s.page_count * 8 > 10000
+)
+ORDER BY s.avg_fragmentation_in_percent DESC
 
-open tables_to_reindex
+PRINT 'Indexes to rebuild:'
+SELECT * FROM @tempIndexTable;
 
-fetch next from tables_to_reindex into @table_name
+RETURN; -- comment this line if you want to run the command
 
-while @@FETCH_STATUS = 0
-begin
-	DBCC INDEXDEFRAG(0, @table_name) WITH NO_INFOMSGS 
-	SELECT @Command = 'ALTER INDEX [' + @IndexName + '] ON ' + '[' + @SchemaName + ']' + '.[' + @TableName + '] REBUILD';
-	select @info = @info + ' REBUILD WITH (MAXDOP = 8)'
-	
-	ALTER INDEX ALL ON Production.Product
-	REBUILD WITH (FILLFACTOR = 80, SORT_IN_TEMPDB = ON,
-	STATISTICS_NORECOMPUTE = ON);
+DECLARE @totalCount INTEGER
+SELECT @totalCount = count(1) FROM @tempIndexTable
+DECLARE @counter INTEGER = 1
 
-	print @info
+WHILE(@counter <= @totalCount)
+BEGIN   
 
-	fetch next from tables_to_reindex into @table_name
-end
+    SET @CurrentIndexName = (SELECT top 1 IndexName FROM @tempIndexTable WHERE RowID = @counter);
+    SET @CurrentTableName = (SELECT top 1 TableName FROM @tempIndexTable WHERE RowID = @counter);
+    SET @CurrentSchemaName = (SELECT top 1 SchemaName FROM @tempIndexTable WHERE RowID = @counter);
+    
+    PRINT 'Rebuild starting (' + convert(VARCHAR(5), @counter) + '/' + convert(VARCHAR(5), @totalCount) + ') [' + @CurrentIndexName + 
+    '] ON [' + @CurrentSchemaName + '].[' + @CurrentTableName + '] at ' 
+    + convert(varchar, getdate(), 121)
 
-close tables_to_reindex
-deallocate tables_to_reindex
-*/
+    BEGIN TRY
+        SET @CmdRebuidIndex = 'ALTER INDEX [' + @CurrentIndexName + '] ON [' + @CurrentSchemaName + '].[' + @CurrentTableName + '] REBUILD PARTITION = ALL WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, ONLINE = ON, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)'
+            EXEC (@CmdRebuidIndex)
+            PRINT 'Rebuild executed [' + @CurrentIndexName + '] ON [' + @CurrentSchemaName + '].[' + @CurrentTableName + '] at ' + convert(varchar, getdate(), 121)
+    END TRY
+    BEGIN CATCH
+        PRINT 'Failed to rebuild [' + @CurrentIndexName + '] ON [' + @CurrentSchemaName + '].[' + @CurrentTableName + ']'
+        PRINT ERROR_MESSAGE()
+    END CATCH
+
+    SET @counter += 1;
+END

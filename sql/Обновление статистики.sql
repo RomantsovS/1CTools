@@ -3,17 +3,17 @@
 DECLARE @DateNow DATETIME
 SELECT @DateNow = DATEADD(dd, 0, DATEDIFF(dd, 0, GETDATE()))
 
-select top 100
+select --top 100
 o.name table_name,
 ind.name index_name,
 s.name stat_name,
-STATS_DATE(s.[object_id], s.stats_id)
+STATS_DATE(s.[object_id], s.stats_id) stat_date
 FROM sys.stats s WITH(NOLOCK)
 	JOIN sys.objects o WITH(NOLOCK) ON s.[object_id] = o.[object_id]
 	JOIN sys.indexes ind ON o.object_id = ind.object_id
 	WHERE o.[type] IN ('U', 'V')
 		AND o.is_ms_shipped = 0
-		--AND o.name = '_AccRgED7575'
+		--AND o.name like '%2809%'
 		--AND ISNULL(STATS_DATE(s.[object_id], s.stats_id), GETDATE()) <= @DateNow
 	--group by o.name, ind.name
 	ORDER BY STATS_DATE(s.[object_id], s.stats_id)

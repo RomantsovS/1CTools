@@ -1,4 +1,10 @@
 echo $(date);
+
+ShowBaseUsrName="$1"
+if [ -z "$1" ]
+then ShowBaseUsrName=0;
+fi
+
 printf "%8s %5s %8s %6s %s\n", "sec", "min", "avrg", "cnt", "Context" \
 ; printf "%s\n" \
 ; time cat LOCKS/rphost*/*.log | \
@@ -10,7 +16,7 @@ perl -pe 's/^\d+:\d+.\d+-//g' | \
 #perl -pe 's/,TLOCK,.*Context=/,Context=/g' | \
 #perl -pe 's/Context.*<line>[ \t]+/Context=/g' | \
 #perl -pe 's/<line>//g' | \
-awk '{
+awk -v ShowBaseUsrNameAWK=$ShowBaseUsrName '{
 	posContext = match($0, ",Context=");
 	Context = substr($0, posContext + 9);
 	
@@ -26,7 +32,7 @@ awk '{
 	posUsr = match($0, ",Usr=");
 	posAppID = match($0, ",AppID=");
 	
-	UsrName = substr($0, posUsr + length(",Usr="), posAppID - posUsr - length(",Usr="));
+	if(ShowBaseUsrNameAWK > 0) UsrName = substr($0, posUsr + length(",Usr="), posAppID - posUsr - length(",Usr="));
 
 	Context = BaseName " :: " Context " :: " UsrName;
 	
