@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://v8.1c.ru/v8/tech-log">
+	<dump location="E:\tj_dumps" externaldump="1" create="true" type="3" prntscrn="true"/>
+	<log location="E:\tj_logs" history="24">
+		<event>
+			<eq property="name" value="admin"/>
+		</event>
+		<event>
+			<eq property="name" value="attn"/>
+		</event>
+		<event>
+			<eq property="name" value="clstr"/>
+		</event>
+		<event>
+			<eq property="name" value="conn"/>
+		</event>
+		<event>
+			<eq property="name" value="excp"/>
+		</event>
+		<event>
+			<eq property="name" value="proc"/>
+		</event>
+		<event>
+			<eq property="name" value="qerr"/>
+		</event>
+		<event>
+			<eq property="name" value="scom"/>
+		</event>
+		<event>
+			<eq property="name" value="call"/>
+		</event>
+		<event>
+			<eq property="name" value="scall"/>
+		</event>
+		<event>
+			<eq property="name" value="sesn"/>
+		</event>
+		<event>
+			<eq property="name" value="srvc"/>
+		</event>
+
+		<event>
+			<eq property="name" value="VRSRESPONSE"/> 
+		</event>
+		<event>
+			<eq property="name" value="VRSREQUEST"/>
+		</event>
+		<event>
+			<eq property="name" value="VRSCACHE"/>
+		</event>
+		<event>
+			<eq property="name" value="SEANCESREUSE"/>
+		</event>
+
+		<event>
+			<eq property="name" value="SYSTEM"/>
+		</event>
+		
+		<property name="all"/>
+	</log>	
+	<system level="error" />
+	<system level="trace" class="OID2Log"/>
+	<property name="All"/>
+</config>

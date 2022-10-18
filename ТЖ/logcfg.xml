@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://v8.1c.ru/v8/tech-log">
+	<log location="I:\LogTJ\ADMIN" history="24">
+		<event>
+			<eq property="Name" value="PROC"/>
+		</event>
+		<event>
+			<eq property="Name" value="ADMIN"/>
+		</event>
+		<event>
+			<eq property="Name" value="ATTN"/>
+		</event>
+		<event>
+			<eq property="Name" value="CONN"/>
+		</event>
+		<event>
+			<eq property="Name" value="SESN"/>
+		</event>
+		<event>
+			<eq property="Name" value="CLSTR"/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="I:\LogTJ\EXCP" history="24">
+		<event>
+			<eq property="Name" value="EXCP"/>
+		</event>
+		<event>
+			<eq property="Name" value="EXCPCNTX"/>
+		</event>
+		<event>
+			<eq property="Name" value="QERR"/>
+		</event>
+		<event>
+			<eq property="name" value="CALL"/>
+			<ne property="RetExcp" value=""/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="I:\LogTJ\LOCKS" history="12">
+		<event>
+			<eq property="name" value="TLOCK" /> 
+		</event>
+		<property name="all"/> 
+	</log>
+	<log location="I:\LogTJ\TTIMEOUTTDEADLOCK" history="24">
+		<event>
+			<eq property="name" value="TTIMEOUT" /> 
+		</event>
+		<event>
+			<eq property="name" value="TDEADLOCK" /> 
+		</event>
+		<property name="all"/> 
+	</log>
+	<log location="I:\LogTJ\CALL" history="24">
+		<event>
+			<eq property="name" value="CALL" />
+			<eq property="process" value="rphost" />
+		</event>
+		<property name="all" /> 
+	</log>
+	<log location="I:\LogTJ\QUERIES" history="24">
+		<event>
+			<eq property="name" value="DBMSSQL" /> 
+			<ge property="Durationus" value="100000"/>
+		</event>
+		<event>
+			<eq property="name" value="DBPOSTGRS" /> 
+			<ge property="Durationus" value="100000"/>
+		</event>
+		<property name="p:processName" /> 
+		<property name="Usr" /> 
+		<property name="Sql" />
+		<property name="Context" />
+		<property name="planSQLText" />
+	</log>
+	<log location="I:\LogTJ\LIC" history="24">
+		<event>
+			<eq property="Name" value="LIC"/>
+		</event>
+		<property name="all"/>
+	</log>
+<!--<plansql/>-->
+</config>

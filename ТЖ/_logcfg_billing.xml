@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://v8.1c.ru/v8/tech-log">
+	<dump type="0"
+			create="true"
+			externaldump="1"
+			location="e:\dumps\"/>
+	<log location="e:\logs\locks_billing"
+			history="1">
+		<event>
+			<eq property="name"
+					value="TLOCK"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="TTIMEOUT"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="TDEADLOCK"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="e:\logs\lqueries_billing"
+			history="24">
+		<event>
+			<eq property="name"
+					value="DBPOSTGRS"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+			<ge property="Durationus"
+					value="300000000"/>
+		</event>
+		<property name="Sql"/>
+		<property name="Context"/>
+	</log>
+	<log history="24"
+			location="e:\logs\call_billing">
+		<event>
+			<eq property="Name"
+					value="EXCPCNTX"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<event>
+			<eq property="Name"
+					value="EXCP"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<event>
+			<eq property="Name"
+					value="PROC"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<event>
+			<eq property="Name"
+					value="CALL"/>
+			<eq property="p:processName"
+					value="BillingSBL"/>
+		</event>
+		<property name="all"/>
+	</log>
+	<log location="e:\logs\log_admin"
+			history="8">
+		<event>
+			<eq property="name"
+					value="ATTN"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="ADMIN"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="PROC"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="SESN"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="CONN"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="QERR"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="EXCP"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="EXCPCNTX"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="CLSTR"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="TLOCK"/>
+			<ne property="WaitConnections"
+					value=""/>
+		</event>
+		<event>
+			<eq property="name"
+					value="CALL"/>
+			<ne property="RetExcp"
+					value=""/>
+		</event>
+		<property name="all"/>
+	</log>
+
+	<log history="2"
+			location="e:\logs\lic">
+		<event>
+			<eq property="Name"
+					value="LIC"/>
+		</event>
+		<property name="all"/>
+	</log>
+
+
+	<!-- !!! Настройки ТЖ от 1С, на случай подачи репорта в тех поддержку !!!
+	<log location="e:\logs\1c"
+			history="2">
+		<event>
+			<eq property="name"
+					value="admin"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="attn"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="clstr"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="conn"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="excp"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="EXCPCNTX"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="proc"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="qerr"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="scom"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="call"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="scall"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="sesn"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="srvc"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="vrserequest"/>
+		</event>
+		<event>
+			<eq property="name"
+					value="vrsresponse"/>
+		</event>
+		<property name="all"/>
+	</log>-->
+
+</config>
+
