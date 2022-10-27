@@ -20,7 +20,8 @@ logman create counter 1C_counter -f bincirc -c "\Processor(_Total)\Interrupts/se
 
 "\Network Adapter(*)\Bytes Total/sec" ^
 
-"\Process("sqlservr")\%% Processor Time" "\SQLServer:Buffer Manager\Buffer cache hit ratio" "\SQLServer:Buffer Manager\Page life expectancy" ^
+"\Process("sqlservr")\%% Processor Time" "\Process("sqlservr")\Private Bytes" "\Process("sqlservr")\Virtual Bytes" ^
+"\SQLServer:Buffer Manager\Buffer cache hit ratio" "\SQLServer:Buffer Manager\Page life expectancy" ^
 
 "\SQLServer:Plan Cache(_Total)\Cache hit ratio" "\SQLServer:Buffer Manager\Checkpoint pages/sec" "\SQLServer:Buffer Manager\Lazy writes/sec" ^
 
