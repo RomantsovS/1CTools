@@ -1,14 +1,14 @@
 SELECT
-		DB_NAME(mid.database_id) as [ИмяБазы],
-		migs.unique_compiles as [КолКомпиляций],
-		migs.user_seeks as [КолОперацийПоиска],
-		migs.user_scans as [КолОперацийПросмотра],
+		DB_NAME(mid.database_id) as [РРјСЏР‘Р°Р·С‹],
+		migs.unique_compiles as [РљРѕР»РљРѕРјРїРёР»СЏС†РёР№],
+		migs.user_seeks as [РљРѕР»РћРїРµСЂР°С†РёР№РџРѕРёСЃРєР°],
+		migs.user_scans as [РљРѕР»РћРїРµСЂР°С†РёР№РџСЂРѕСЃРјРѕС‚СЂР°],
 		migs.last_user_seek as last_user_seek,
-		round(migs.avg_total_user_cost, 2) as [СредняяСтоимость],
-		CAST(migs.avg_user_impact AS int) as [СреднийПроцентВыигрыша],
-		OBJECT_NAME(mid.object_id,mid.database_id) as [ТаблицаИндекса],
-		cast(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) as int) as [СреднееПредполагаемоеВлияние],
-		round(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) * migs.avg_total_user_cost, 0) as [СреднееПредполагаемоеВлияние1],
+		round(migs.avg_total_user_cost, 2) as [РЎСЂРµРґРЅСЏСЏРЎС‚РѕРёРјРѕСЃС‚СЊ],
+		CAST(migs.avg_user_impact AS int) as [РЎСЂРµРґРЅРёР№РџСЂРѕС†РµРЅС‚Р’С‹РёРіСЂС‹С€Р°],
+		OBJECT_NAME(mid.object_id,mid.database_id) as [РўР°Р±Р»РёС†Р°РРЅРґРµРєСЃР°],
+		cast(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) as int) as [РЎСЂРµРґРЅРµРµРџСЂРµРґРїРѕР»Р°РіР°РµРјРѕРµР’Р»РёСЏРЅРёРµ],
+		round(migs.avg_user_impact*(migs.user_seeks+migs.user_scans) * migs.avg_total_user_cost, 0) as [РЎСЂРµРґРЅРµРµРџСЂРµРґРїРѕР»Р°РіР°РµРјРѕРµР’Р»РёСЏРЅРёРµ1],
 		'CREATE INDEX [IX_' +OBJECT_NAME(mid.object_id,mid.database_id) + '_'
 		+ REPLACE(REPLACE(REPLACE(ISNULL(mid.equality_columns,''),', ','_'),'[',''),']','') +
 		CASE
@@ -23,7 +23,7 @@ SELECT
 		'' END
 		+ ISNULL (mid.inequality_columns, '')
 		+ ')'
-		+ ISNULL (' INCLUDE (' + mid.included_columns + ')', '') AS [РекомендуемыйИндекс],
+		+ ISNULL (' INCLUDE (' + mid.included_columns + ')', '') AS [Р РµРєРѕРјРµРЅРґСѓРµРјС‹Р№РРЅРґРµРєСЃ],
 		mid.inequality_columns,
 		mid.equality_columns,
 		mid.included_columns
@@ -38,4 +38,4 @@ SELECT
 		 AND mid.database_id = DB_ID()
 		--and OBJECT_NAME(mid.object_id,mid.database_id) like '%_Reference%'
 		--and mid.equality_columns like '%878%'
-		ORDER BY [СреднееПредполагаемоеВлияние1] desc
+		ORDER BY [РЎСЂРµРґРЅРµРµРџСЂРµРґРїРѕР»Р°РіР°РµРјРѕРµР’Р»РёСЏРЅРёРµ1] desc
