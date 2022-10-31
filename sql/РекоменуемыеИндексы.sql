@@ -1,4 +1,4 @@
-SELECT 
+SELECT
 		DB_NAME(mid.database_id) as [ИмяБазы],
 		migs.unique_compiles as [КолКомпиляций],
 		migs.user_seeks as [КолОперацийПоиска],
